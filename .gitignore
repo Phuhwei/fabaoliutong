@@ -1,0 +1,17 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+.DS_Store
+
+# Dependency directories
+node_modules
+bower_components
+
+# Build directory
+build*
+
+# Optional npm cache directory
+.npm
+.idea/
+mytest*
