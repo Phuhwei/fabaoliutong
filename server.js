@@ -39,6 +39,6 @@ if (nodeEnv === 'development') {
   });
 }
 
-const port = process.env.PORT || (nodeEnv !== 'development' && 3000) || 3010;
+const port = process.env.PORT || (nodeEnv !== 'development' && 3000) || 5000;
 
 app.listen(port, () => console.log('\x1b[32m%s\x1b[0m', `listening: ${IP}:${port}...`));

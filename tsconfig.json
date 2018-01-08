@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "allowJs": true,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "jsx": "react"
+  },
+  "exclude": [
+    "mytest*",
+    "test",
+    "build"
+  ]
+}

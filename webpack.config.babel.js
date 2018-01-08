@@ -8,6 +8,8 @@ const LAUNCH_COMMAND = process.env.npm_lifecyle_event;
 const { IP, NODE_ENV } = process.env;
 const env = NODE_ENV;
 const isProduction = env === 'production' || env === 'staging' || LAUNCH_COMMAND === 'production';
+const { CheckerPlugin } = require('awesome-typescript-loader');
+
 
 function findBuildDir() {
   switch (env) {
@@ -35,8 +37,7 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
 const PATHS = {
   // this app will be the entry point;
   app: [
-    path.join(__dirname, 'src/javascript/index.jsx'),
-    path.join(__dirname, 'src/sass/style_importer.js'),
+    path.join(__dirname, 'src/javascript/App.tsx'),
   ],
   // this will be the output path;
   build: path.resolve(__dirname, findBuildDir()),
@@ -61,7 +62,6 @@ const VENDOR_LIBS = [
   'react',
   'react-bootstrap',
   'react-dom',
-  'react-input-mask',
   'react-redux',
   'react-router',
   'react-router-redux',
@@ -99,24 +99,14 @@ const base = {
     reasons: true,
     errorDetails: true,
   },
+  resolve: {
+    modules: ['node_modules'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.css'],
+  },
   module: {
     rules: [
-      { test: /\.jsx$/, exclude: /node_modules/, loader: 'babel-loader', query: { presets: ['env'] } },
-      { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader', query: { presets: ['env'] } },
-      {
-        test: /\.scss$/,
-        exclude: /(node_modules|bower_components)/,
-        use: extractStyles.extract({ // this loader will disable in production
-          use: [
-            'css-loader',
-            'resolve-url-loader',
-            'sass-loader',
-          ],
-          // use style-loader in development
-          fallback: 'style-loader',
-          publicPath: '/build',
-        }),
-      },
+      { test: /\.tsx?$/, exclude: /node_modules/, loader: 'awesome-typescript-loader' },
+      { test: /\.js$/, use: ['source-map-loader'], enforce: 'pre' },
       { // regular css files
         test: /\.css$/,
         exclude: /(node_modules|bower_components)/,
@@ -134,25 +124,28 @@ const base = {
       },
     ],
   },
-  resolve: {
-    modules: ['node_modules'],
-    extensions: ['.js', '.jsx', '.scss', '.css'],
-  },
 };
 
 const developmentBuild = {
   // this doubles the size of the output the app is 3.4mb before adding this
-  devtool: 'cheap-module-inline-source-map',
+  devtool: 'inline-source-map',
+  devServer: {
+    contentBase: './dist',
+    hot: true,
+  },
   plugins: [
+    new CheckerPlugin(),
     extractStyles,
     HtmlWebpackPluginConfig,
     environment,
+    new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
   ],
 };
 
 const productionBuild = {
   plugins: [
+    new CheckerPlugin(),
     extractStyles,
     HtmlWebpackPluginConfig,
     environment,
@@ -165,5 +158,7 @@ const productionBuild = {
   ],
 };
 
-module.exports = Object.assign({}, base,
+module.exports = Object.assign(
+  {},
+  base,
   isProduction ? productionBuild : developmentBuild);
