@@ -37,7 +37,7 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
 const PATHS = {
   // this app will be the entry point;
   app: [
-    path.join(__dirname, 'src/javascript/App.tsx'),
+    path.join(__dirname, 'src/javascript/index.tsx'),
   ],
   // this will be the output path;
   build: path.resolve(__dirname, findBuildDir()),
