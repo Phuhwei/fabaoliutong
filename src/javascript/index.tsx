@@ -1,32 +1,28 @@
-import * as ReactDOM from 'react-dom';
 import * as React from 'react';
-import thunk from 'redux-thunk';
+import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import reducer from './redux/reducers/allReducers';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
+import thunk from 'redux-thunk';
 import Main from './components/Main';
-
-
-const reducers = combineReducers({
-  reducer
-});
+import reducer from './redux/reducers/allReducers';
 
 const configureStore = () => {
   const store = createStore(
-    reducers,
-    // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-  )
+    reducer,
+    (window as any).__REDUX_DEVTOOLS_EXTENSION__ &&
+    (window as any).__REDUX_DEVTOOLS_EXTENSION__(),
+  );
 
   if (module.hot) {
     // Enable Webpack hot module replacement for reducers
     module.hot.accept('./redux/reducers/allReducers', () => {
-      const nextRootReducer = reducers;
+      const nextRootReducer = reducer;
       store.replaceReducer(nextRootReducer);
     });
   }
 
   return store;
-}
+};
 
 ReactDOM.render(
   <Main store={configureStore()} />,

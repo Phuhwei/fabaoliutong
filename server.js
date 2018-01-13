@@ -18,6 +18,9 @@ if (nodeEnv === 'development') {
   const webpackConfig = require('./webpack.config.babel.js');
   const webpackCompiler = webpack(webpackConfig);
 
+  app.post('/api/order', (req, res) => {
+    res.status(200).json({ message: 'success' });
+  });
   app.use(webpackMiddleware(webpackCompiler, {
     publicPath: webpackConfig.output.publicPath,
     stats: {
@@ -26,7 +29,6 @@ if (nodeEnv === 'development') {
       'errors-only': true,
     },
   }));
-
   app.use(webpackHotMiddleware(webpackCompiler, {
     log: console.log, path: '/__webpack_hmr', heartbeat: 10 * 1000,
   }));

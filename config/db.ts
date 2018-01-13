@@ -1,4 +1,13 @@
-export default {
+export const database: { [key: string]: ObjStr } = {
+  development: {
+    host: 'localhost',
+    name: 'fabaoliutong',
+    user: 'root',
+    password: 'root',
+  },
+};
+
+export const dbSchema = {
   area: {
     city: '城市',
   },
@@ -18,6 +27,7 @@ export default {
       link: 'status',
     },
     final_price: '确定总价',
+    date: '日期',
   },
   person: {
     name: '订购人',

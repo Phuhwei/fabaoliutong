@@ -1,6 +1,8 @@
+import * as Debug from 'debug';
 import * as mysql from 'promise-mysql';
 import { database } from '../../config';
-import { devConsole } from './';
+
+const debug = Debug('dev:db');
 
 declare type Connect = mysql.PoolConnection;
 
@@ -66,7 +68,7 @@ export const getOneTable = (table: string, referenceJSON: DbJSON, target?: strin
     .then(sql => getConnection()
       .then(c => query(c, sql)))
     .catch(err => {
-      devConsole("'getOneTable' Error");
+      debug("'getOneTable' Error");
       throw err;
     });
 
@@ -75,21 +77,9 @@ export const insertOneRow = (table: string, insertJSON: DbJSON) => Promise.resol
   return getConnection().then(c => query(c, sql));
 })
   .catch(err => {
-    devConsole("'insertOneRow' Error");
+    debug("'insertOneRow' Error");
     throw err;
   });
-
-// export const insertMultipleRows = (table, fields, valueSets) => Promise.resolve().then(() => {
-//   // fields: array[]; valueSets: array of "('value1' , 'value2', 'value3','value4')"
-//   const columns = fields.map(column => `\`${column}\``);
-// tslint:disable-next-line:max-line-length
-//   const sql = `INSERT INTO ${table} (${columns.join(', ')}) VALUES ${valueSets.map(() => `(${columns.map(() => '?').join(', ')})`).join(', ')}`;
-//   return getConnection().then(c => query(c, sql, [].concat(...valueSets)));
-// })
-//   .catch(e => {
-//     devConsole("'insertMultipleRows' Error");
-//     throw e;
-//   });
 
 interface Query {
   method: string;
@@ -107,13 +97,13 @@ export const updateOneRow = (table: string, refJSON: DbJSON, tarJSON: DbJSON, mu
     return getConnection().then(c => query(c, sql));
   })
     .catch(err => {
-      devConsole("'updateOneRow' Error");
+      debug("'updateOneRow' Error");
       throw err;
     });
 
-export const freeQuery = (sql: string, values: Array<string | number>) =>
+export const freeQuery = (sql: string, values?: Array<string | number>) =>
   getConnection().then(c => query(c, sql, values))
     .catch(err => {
-      devConsole("'freeQuery' Error");
+      debug("'freeQuery' Error");
       throw err;
     });
