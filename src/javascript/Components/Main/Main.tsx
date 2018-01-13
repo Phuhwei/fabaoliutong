@@ -1,12 +1,14 @@
-import * as React from "react";
+import * as React from 'react';
 import { Provider } from 'react-redux';
-import * as PropTypes from 'prop-types';
+import {
+  BrowserRouter as Router,
+} from 'react-router-dom';
+import Container from '../Container';
 
 export default ({ store }: { store: any }) => (
   <Provider store={store}>
-    <div>
-      <p>hello world</p>
-      <p>hello world</p>
-    </div>
+    <Router>
+      <Container />
+    </Router>
   </Provider>
 );

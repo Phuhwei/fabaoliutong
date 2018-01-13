@@ -8,8 +8,6 @@ const LAUNCH_COMMAND = process.env.npm_lifecyle_event;
 const { IP, NODE_ENV } = process.env;
 const env = NODE_ENV;
 const isProduction = env === 'production' || env === 'staging' || LAUNCH_COMMAND === 'production';
-const { CheckerPlugin } = require('awesome-typescript-loader');
-
 
 function findBuildDir() {
   switch (env) {
@@ -38,6 +36,7 @@ const PATHS = {
   // this app will be the entry point;
   app: [
     path.join(__dirname, 'src/javascript/index.tsx'),
+    path.join(__dirname, 'src/css/shared.css'),
   ],
   // this will be the output path;
   build: path.resolve(__dirname, findBuildDir()),
@@ -63,8 +62,7 @@ const VENDOR_LIBS = [
   'react-bootstrap',
   'react-dom',
   'react-redux',
-  'react-router',
-  'react-router-redux',
+  'react-router-dom',
   'redux',
   'redux-thunk',
   'superagent',
@@ -107,20 +105,33 @@ const base = {
     rules: [
       { test: /\.tsx?$/, exclude: /node_modules/, loader: 'awesome-typescript-loader' },
       { test: /\.js$/, use: ['source-map-loader'], enforce: 'pre' },
-      { // regular css files
+      { // module css files
         test: /\.css$/,
-        exclude: /(node_modules|bower_components)/,
-        use: cssModuleLoader(isProduction),
+        exclude: [
+          'node_modules',
+          'bower_components',
+          path.resolve(__dirname, 'src/css'),
+        ],
+        use: cssModuleLoader(isProduction, true),
       },
-      {
-        test: /\.(eot|ttf|woff|woff2)$/,
-        use: 'file-loader?name=[name].[ext]&outputPath=fonts/',
-        exclude: [/images/],
+      { // shared css files
+        test: /\.css$/,
+        include: [
+          path.resolve(__dirname, 'src/css'),
+        ],
+        use: cssModuleLoader(isProduction, false),
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
-        use: ['file-loader?name=[name].[ext]&outputPath=img/'],
-        exclude: [/fonts/],
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'img/',
+            },
+          },
+        ],
       },
     ],
   },
@@ -129,23 +140,16 @@ const base = {
 const developmentBuild = {
   // this doubles the size of the output the app is 3.4mb before adding this
   devtool: 'inline-source-map',
-  devServer: {
-    contentBase: './dist',
-    hot: true,
-  },
   plugins: [
-    new CheckerPlugin(),
     extractStyles,
     HtmlWebpackPluginConfig,
     environment,
-    new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
   ],
 };
 
 const productionBuild = {
   plugins: [
-    new CheckerPlugin(),
     extractStyles,
     HtmlWebpackPluginConfig,
     environment,
@@ -158,7 +162,6 @@ const productionBuild = {
   ],
 };
 
-module.exports = Object.assign(
-  {},
-  base,
-  isProduction ? productionBuild : developmentBuild);
+module.exports = Object.assign({}, base, isProduction
+  ? !console.log('prod') && productionBuild
+  : !console.log('dev') && developmentBuild);

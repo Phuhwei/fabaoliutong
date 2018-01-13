@@ -1,6 +1,6 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const cssModuleLoader = (isProduction) => {
+const cssModuleLoader = (isProduction, isLocal) => {
   if (isProduction) {
     return ExtractTextPlugin.extract({
       use: [
@@ -8,7 +8,7 @@ const cssModuleLoader = (isProduction) => {
           loader: 'css-loader',
           options: {
             modules: true,
-            localIdentName: '[local]--[hash:base64:5]',
+            localIdentName: `[local]${isLocal ? '--[hash:base64:5]' : ''}`,
           },
         },
         {
@@ -24,7 +24,7 @@ const cssModuleLoader = (isProduction) => {
       loader: 'css-loader',
       options: {
         modules: true,
-        localIdentName: '[local]--[hash:base64:5]',
+        localIdentName: `[local]${isLocal ? '--[hash:base64:5]' : ''}`,
       },
     },
     { loader: 'resolve-url-loader' },

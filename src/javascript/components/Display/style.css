@@ -1,0 +1,10 @@
+.row {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+}
+
+.field {
+  text-align: center;
+  border: 1px solid var(--very-light-grey);
+}

@@ -3,10 +3,8 @@ import * as React from 'react';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-// import { routerMiddleware } from 'react-router-redux';
-// import { hashHistory } from 'react-router';
 import reducer from './redux/reducers/allReducers';
-import Main from './Components/Main';
+import Main from './components/Main';
 
 
 const reducers = combineReducers({

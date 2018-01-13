@@ -1,14 +1,27 @@
 {
   "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
     "sourceMap": true,
     "allowJs": true,
     "noImplicitAny": true,
     "removeComments": true,
-    "jsx": "react"
+    "jsx": "react",
+    "typeRoots": [
+      "node_modules/@types",
+      "typings"
+    ],
+    "lib": [
+      "es5",
+      "es2015",
+      "es6",
+      "es7",
+      "dom",
+    ]
   },
   "exclude": [
     "mytest*",
     "test",
     "build"
-  ]
+  ],
 }

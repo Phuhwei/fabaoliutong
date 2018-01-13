@@ -1,0 +1,42 @@
+/* @import url(https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,300,400,700); */
+
+:root {
+  --font-family-base: 'Open Sans', sans-serif;
+  --light-green: #CDD758;
+  --light-blue: #6CC5D4;
+  --dark-blue: #03AAC4;
+  --dark-green: #97C355;
+  --black: #3B3B3C;
+  --background-color: #F6F7F9;
+  --very-light-grey: #E6E6E6;
+  --light-grey: #a9a9a9;
+  --dark-grey: #666666;
+  --white: #ffffff;
+  --box-shadow: rgba(155, 155, 155, 0.5);
+  --form-grey: #aeafb0;
+  --upload-blue: #edfbff;
+}
+
+html {
+  height: 100%;
+  font-size: 1em;
+  /* Base 16px = 1rem*/
+}
+
+#app {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  background-color: var(--background-color);
+  color: var(--black);
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+}
+
+/* button */
+.btn-primary.active, .btn-primary:hover, .btn-primary:active, .btn-primary:focus, .open>.dropdown-toggle.btn-primary .btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open>.dropdown-toggle.btn-primary.focus, .open>.dropdown-toggle.btn-primary:focus, .open>.dropdown-toggle.btn-primary:hover {
+  /* color: #fff; */
+  background-color: #338CAD;
+  /* border-color: #122b40; */
+}
