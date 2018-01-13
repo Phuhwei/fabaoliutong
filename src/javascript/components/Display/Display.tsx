@@ -5,8 +5,6 @@ const style = require('./style.css');
 const findColumnNames = (db: Obj, table: string) =>
   Object.keys(db[table]).map((column: string) => {
     if (typeof db[table][column] === 'string') return db[table][column];
-    // console.log(db[table][column].table);
-    // return 'test';
     return db[db[table][column].table][db[table][column].link];
   });
 
@@ -28,5 +26,5 @@ export default ({ table }: ModuleProps) => {
         ))}
       </div>
     </section>
-  )
+  );
 };
