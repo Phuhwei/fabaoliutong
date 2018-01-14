@@ -11,6 +11,7 @@ const configureStore = () => {
     reducer,
     (window as any).__REDUX_DEVTOOLS_EXTENSION__ &&
     (window as any).__REDUX_DEVTOOLS_EXTENSION__(),
+    applyMiddleware(thunk),
   );
 
   if (module.hot) {

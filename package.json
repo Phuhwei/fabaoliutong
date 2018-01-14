@@ -16,15 +16,19 @@
     "react-redux": "^5.0.2",
     "react-router-dom": "^4.2.2",
     "redux": "^3.6.0",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "superagent": "^3.8.2"
   },
   "devDependencies": {
     "@types/debug": "^0.0.30",
+    "@types/lodash": "^4.14.92",
     "@types/prop-types": "^15.5.2",
     "@types/react": "^16.0.34",
+    "@types/react-bootstrap": "^0.31.9",
     "@types/react-dom": "^16.0.3",
     "@types/react-redux": "^5.0.14",
     "@types/react-router-dom": "^4.2.3",
+    "@types/superagent": "^3.5.6",
     "@types/webpack-env": "^1.13.3",
     "awesome-typescript-loader": "^3.4.1",
     "css-loader": "^0.28.0",
@@ -53,9 +57,10 @@
   },
   "scripts": {
     "stop": "pkill fabaoliutong",
-    "build": "webpack;",
+    "build_api": "tsc -p 'tsconfig_api.json'",
+    "build": "npm run build_api; webpack;",
     "dev_run": "export DEBUG='dev:*' && NODE_ENV='development' node server.js",
-    "dev": "webpack; npm run dev_run",
+    "dev": "npm run build; npm run dev_run",
     "build_staging": "NODE_ENV='staging' webpack -p --progress",
     "build_prod": "NODE_ENV='production' webpack -p --progress",
     "staging": "npm run staging_build && NODE_ENV='staging' node server.js",

@@ -1,61 +1,60 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { dbSchema } from '../../../../config';
+import { dbSchema } from '../../../../api/config';
+import { findColumnNames, getOrders } from '../../lib';
+import * as actions from '../../redux/actions';
 const style = require('./style.css');
 
-const findColumnNames = (db: Obj, table: string) =>
-  Object.keys(db[table]).map((column: string) => {
-    if (typeof db[table][column] === 'string') return db[table][column];
-    return db[db[table][column].table][db[table][column].link];
-  });
-
 interface ModuleProps {
+  state: Obj;
   table: string;
+  saveToRedux: typeof actions.saveToRedux;
 }
 
 class Display extends React.Component<ModuleProps> {
   public columns = findColumnNames(dbSchema, this.props.table);
   public columnWidth = `${100 / this.columns.length}%`;
-  // public componentWillMount() {
-  //   // const sql = ['SELECT',
-  //   //   'treasure.name as treasure,',
-  //   //   'person.name as person,',
-  //   //   'o.unit_price,',
-  //   //   'o.quantity,',
-  //   //   'st.status,',
-  //   //   'o.final_price,',
-  //   //   'o.date',
-  //   //   'FROM',
-  //   //   'fabaoliutong.order as o,',
-  //   //   'fabaoliutong.status as st',
-  //   //   'fabaoliutong.area as area',
-  //   //   'fabaoliutong.person as person',
-  //   //   'fabaoliutong.treasure as treasure',
-  //   //   'WHERE o.treasure_id = treasure.id',
-  //   //   'AND o.person_id = person.id',
-  //   //   'AND o.status_id = st.id;',
-  //   // ].join(' ');
-  //   // freeQuery(sql)
-  //   //   .then(res => console.log('hahahah'));
-  // }
+  public componentDidMount() {
+    getOrders()
+      .then((res: Obj) => {
+        this.props.saveToRedux({ orderList: res.orders });
+      });
+  }
 
   public render() {
+    const { state } = this.props;
     return (
-      <section className={style.table}>
+      <section>
         <div className={style.row}>
           {this.columns.map(name => (
             <span
               key={name}
               style={{ width: this.columnWidth }}
               className={style.field}
-            >{name}</span>
+            >{name}
+            </span>
           ))}
         </div>
+        {state.orderList.map((order: Obj) => (
+          <div key={JSON.stringify(order)} className={style.row}>
+            {this.columns.map(term => (
+              <span
+                key={term}
+                style={{ width: this.columnWidth }}
+                className={style.field}
+              >{term === '日期'
+                ? order[term].substr(0, 10)
+                : order[term]}
+              </span>
+            ))}
+          </div>
+        ))}
       </section>
     );
   }
 }
 
 export default connect(
-  (state: Obj) => state,
+  (state: Obj) => ({ state }),
+  { saveToRedux: actions.saveToRedux },
 )(Display);

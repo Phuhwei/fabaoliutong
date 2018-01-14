@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
+const apiModel = require('./build/api/model');
 
 const app = express();
 app.use(morgan('tiny'));
@@ -19,7 +20,12 @@ if (nodeEnv === 'development') {
   const webpackCompiler = webpack(webpackConfig);
 
   app.post('/api/order', (req, res) => {
-    res.status(200).json({ message: 'success' });
+    apiModel.getAllOrders()
+      .then(orders => res.status(200).json({ orders }));
+  });
+  app.post('/api/table', (req, res) => {
+    apiModel.getTableData(req.headers.table)
+      .then(data => res.status(200).json({ data }));
   });
   app.use(webpackMiddleware(webpackCompiler, {
     publicPath: webpackConfig.output.publicPath,

@@ -1,3 +1,5 @@
+declare interface ObjStr { [key: string]: string; }
+
 export const database: { [key: string]: ObjStr } = {
   development: {
     host: 'localhost',
@@ -20,13 +22,13 @@ export const dbSchema = {
       table: 'person',
       link: 'name',
     },
-    unit_price: '单价',
+    unit_price: '单价(¥)',
     quantity: '数量',
     status_id: {
       table: 'status',
-      link: 'status',
+      link: 'name',
     },
-    final_price: '确定总价',
+    final_price: '确定总价($)',
     date: '日期',
   },
   person: {
@@ -39,7 +41,7 @@ export const dbSchema = {
     address: '地址',
   },
   status: {
-    status: '状态',
+    name: '状态',
   },
   treasure: {
     name: '法宝',

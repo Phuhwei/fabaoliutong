@@ -1,8 +1,10 @@
+import { merge } from '../../lib';
 
 const env = process.env.NODE_ENV;
 
 const initialState = {
-  test: 'lol',
+  orderList: [] as Obj[],
+  showModal: {},
 };
 
 export default (state = initialState, action: any) => {
@@ -10,6 +12,8 @@ export default (state = initialState, action: any) => {
     case 'CLEAR_STATE': {
       return initialState;
     }
+    case 'SAVE_STORE':
+      return merge(state, action.payload);
     default: return state;
   }
 };

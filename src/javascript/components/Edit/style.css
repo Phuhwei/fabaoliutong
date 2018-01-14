@@ -1,0 +1,11 @@
+.field {
+  display: flex;
+}
+
+.field>label {
+  width: 100px
+}
+
+.field input, .field select {
+  width: 150px;
+}

@@ -1,6 +1,6 @@
 import * as Debug from 'debug';
 import * as mysql from 'promise-mysql';
-import { database } from '../../config';
+import { database } from '../config';
 
 const debug = Debug('dev:db');
 
