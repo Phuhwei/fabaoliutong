@@ -13,3 +13,10 @@ export const getTableData = (table: string) => request({
   url: `${frontend[env]}/api/table`,
   headers: { table },
 });
+
+export const insertEntry = (table: string, data: ObjStr) => request({
+  method: 'post',
+  url: `${frontend[env]}/api/add`,
+  headers: { table },
+  body: data,
+});

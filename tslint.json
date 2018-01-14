@@ -1,18 +1,37 @@
 {
   "defaultSeverity": "error",
   "extends": [
-      "tslint:recommended"
+    "tslint:recommended"
   ],
   "jsRules": {},
   "rules": {
-    "quotemark": [true, "single", "avoid-escape"],
-    "arrow-parens": [true, "ban-single-arg-parens"],
-    "object-literal-sort-keys": [false],
-    "max-line-length": [true, 100],
+    "quotemark": [
+      true,
+      "single",
+      "avoid-escape"
+    ],
+    "arrow-parens": [
+      true,
+      "ban-single-arg-parens"
+    ],
+    "object-literal-sort-keys": [
+      false
+    ],
+    "max-line-length": [
+      true,
+      100
+    ],
     "no-switch-case-fall-through": true,
     "no-var-requires": false,
-    "interface-name": [true, "never-prefix"],
-    "curly": [true, "ignore-same-line"]
+    "interface-name": [
+      true,
+      "never-prefix"
+    ],
+    "curly": [
+      true,
+      "ignore-same-line"
+    ],
+    "no-unused-variable": true
   },
   "rulesDirectory": []
 }

@@ -1,4 +1,5 @@
 import * as superagent from 'superagent';
+import { dbSchema } from '../../../api/config';
 
 const env = process.env.NODE_ENV;
 
@@ -77,9 +78,13 @@ export function merge(destin: Obj, source: Obj) {
   return Object.assign({}, destin, sourceObj);
 }
 
-export const findColumnNames = (db: Obj, table: string) =>
-  Object.keys(db[table]).map((column: string) => {
-    const type = db[table][column];
-    if (typeof type === 'string') return type;
-    return db[type.table][type.link];
+export const findColumnNames = (table: string) =>
+  Object.keys(dbSchema[table]).map((column: string) => {
+    const { alias, link } = dbSchema[table][column];
+    if (alias) return alias;
+    return dbSchema[link.table][link.column].alias;
   });
+export const findRequiredColumns = (table: string) =>
+  Object.keys(dbSchema[table]).filter((column: string) => dbSchema[table][column].required);
+
+export const wait = (time: number) => new Promise(r => setTimeout(r, time || 1000));

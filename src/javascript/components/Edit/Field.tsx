@@ -1,77 +1,71 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { dbSchema } from '../../../../api/config';
-import { getTableData } from '../../lib';
+import { getTableData, wait } from '../../lib';
 import * as actions from '../../redux/actions';
-import Edit from './Edit';
 
 interface LinkColumn {
-  table: string;
-  link: string;
+  required: boolean;
+  alias: string;
+  link: {
+    table: string;
+    column: string;
+  };
 }
 interface ModuleProps {
-  state: rootState;
+  state: RootState;
   table: string;
   column: string; // the display column name
   columnId: string; // the original column name
-  columnValue: string | LinkColumn;
+  columnValue: LinkColumn;
   saveToRedux: typeof actions.saveToRedux;
+  handleDisableButton: Func;
 }
-interface State {
-  optionList: Option[];
-  disbleOption: boolean;
-}
-interface Option {
-  id: number;
-  name: string;
-}
-class Field extends React.Component<ModuleProps, State> {
+
+class Field extends React.Component<ModuleProps> {
   public linkTable = '';
-  public state: State = {
-    disbleOption: false,
-    optionList: [],
-  };
+  public linkColumn = '';
   public componentDidMount() {
-    if (this.props.columnValue && this.props.columnValue.constructor.name === 'Object') {
-      const linkTable = (this.props.columnValue as LinkColumn).table;
+    if (this.props.columnValue.link) {
+      const { table: linkTable, column } = this.props.columnValue.link;
       this.linkTable = linkTable;
+      this.linkColumn = column;
       getTableData(linkTable)
-        .then((res: Obj) => this.setState({ optionList: res.data }));
+        .then((res: Obj) => this.props.saveToRedux({ tableData: { [linkTable]: res.data } }));
     }
+  }
+  public handleChange(value: string) {
+    this.props.saveToRedux({
+      tableTemp: { [this.props.table]: { [this.props.columnId]: value } },
+    });
+    wait(100).then(this.props.handleDisableButton);
+    // .then((res: Obj) => console.log(res[this.props.table]));
   }
   public render() {
     const { state, table, saveToRedux, columnId } = this.props;
     return (
-      typeof this.props.columnValue === 'string'
+      !!this.props.columnValue.alias
         ? (
           <input
             id={this.props.column}
             value={state.tableTemp[table] && state.tableTemp[table][columnId] || ''}
-            onChange={evt => saveToRedux({
-              tableTemp: { [table]: { [columnId]: evt.target.value } },
-            })}
+            onChange={evt => this.handleChange(evt.target.value)}
           />)
         : (
           <div id={this.props.column}>
             <select
-              value={state.tableTemp[table] && state.tableTemp[table][columnId] || ''}
-              onChange={evt => {
-                this.setState({ disbleOption: true });
-                saveToRedux({
-                  tableTemp: { [table]: { [columnId]: evt.target.value } },
-                });
-              }}
+              defaultValue='请选择'
+              onChange={evt => this.handleChange(evt.target.value)}
             >
-              <option selected disabled={this.state.disbleOption}>请选择</option>
-              {this.state.optionList.map((opt: Option) =>
+              <option disabled>请选择</option>
+              {(state.tableData[this.linkTable] || []).map((opt: Obj) =>
                 <option key={opt.id} value={opt.id}>
-                  {opt.name}
+                  {opt[this.linkColumn]}
                 </option>)}
             </select>
             <button
               onClick={evt => {
                 evt.preventDefault();
-                this.props.saveToRedux({ showModal: { [this.linkTable]: true } });
+                saveToRedux({ showModal: { [this.linkTable]: true } });
               }}
             >新建
             </button>
@@ -81,6 +75,6 @@ class Field extends React.Component<ModuleProps, State> {
 }
 
 export default connect(
-  (state: rootState) => ({ state }),
+  (state: RootState) => ({ state }),
   { saveToRedux: actions.saveToRedux },
 )(Field);

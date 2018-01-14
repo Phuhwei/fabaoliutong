@@ -1,11 +1,11 @@
 import { merge } from '../../lib';
 
-const env = process.env.NODE_ENV;
+// const env = process.env.NODE_ENV;
 
-const initialState = {
-  orderList: [] as Obj[],
+export const initialState = {
   showModal: {},
   tableTemp: {},
+  tableData: {},
 };
 
 export default (state = initialState, action: any) => {

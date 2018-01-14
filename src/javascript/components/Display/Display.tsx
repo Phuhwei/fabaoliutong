@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { dbSchema } from '../../../../api/config';
-import { findColumnNames, getOrders } from '../../lib';
+import { findColumnNames } from '../../lib';
 import * as actions from '../../redux/actions';
 const style = require('./style.css');
 
@@ -9,16 +8,14 @@ interface ModuleProps {
   state: Obj;
   table: string;
   saveToRedux: typeof actions.saveToRedux;
+  requestOrders: typeof actions.requestOrders;
 }
 
 class Display extends React.Component<ModuleProps> {
-  public columns = findColumnNames(dbSchema, this.props.table);
-  public columnWidth = `${100 / this.columns.length}%`;
+  public columnList = findColumnNames(this.props.table);
+  public columnWidth = `${100 / this.columnList.length}%`;
   public componentDidMount() {
-    getOrders()
-      .then((res: Obj) => {
-        this.props.saveToRedux({ orderList: res.orders });
-      });
+    this.props.requestOrders();
   }
 
   public render() {
@@ -26,7 +23,7 @@ class Display extends React.Component<ModuleProps> {
     return (
       <section>
         <div className={style.row}>
-          {this.columns.map(name => (
+          {this.columnList.map(name => (
             <span
               key={name}
               style={{ width: this.columnWidth }}
@@ -35,9 +32,9 @@ class Display extends React.Component<ModuleProps> {
             </span>
           ))}
         </div>
-        {state.orderList.map((order: Obj) => (
+        {(state.tableData.order || []).map((order: Obj) => (
           <div key={JSON.stringify(order)} className={style.row}>
-            {this.columns.map(term => (
+            {this.columnList.map(term => (
               <span
                 key={term}
                 style={{ width: this.columnWidth }}
@@ -56,5 +53,8 @@ class Display extends React.Component<ModuleProps> {
 
 export default connect(
   (state: Obj) => ({ state }),
-  { saveToRedux: actions.saveToRedux },
+  {
+    saveToRedux: actions.saveToRedux,
+    requestOrders: actions.requestOrders,
+  },
 )(Display);

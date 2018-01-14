@@ -2,6 +2,8 @@ const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const apiModel = require('./build/api/model');
+const bodyParser = require('body-parser');
+
 
 const app = express();
 app.use(morgan('tiny'));
@@ -19,14 +21,8 @@ if (nodeEnv === 'development') {
   const webpackConfig = require('./webpack.config.babel.js');
   const webpackCompiler = webpack(webpackConfig);
 
-  app.post('/api/order', (req, res) => {
-    apiModel.getAllOrders()
-      .then(orders => res.status(200).json({ orders }));
-  });
-  app.post('/api/table', (req, res) => {
-    apiModel.getTableData(req.headers.table)
-      .then(data => res.status(200).json({ data }));
-  });
+  app.use(bodyParser.json());
+
   app.use(webpackMiddleware(webpackCompiler, {
     publicPath: webpackConfig.output.publicPath,
     stats: {
@@ -38,6 +34,22 @@ if (nodeEnv === 'development') {
   app.use(webpackHotMiddleware(webpackCompiler, {
     log: console.log, path: '/__webpack_hmr', heartbeat: 10 * 1000,
   }));
+
+  app.post('/api/order', (req, res) => {
+    apiModel.getAllOrders()
+      .then(orders => res.status(200).json({ orders }))
+      .catch(error => res.status(500).json({ error }));
+  });
+  app.post('/api/table', (req, res) => {
+    apiModel.getTableData(req.headers.table)
+      .then(data => res.status(200).json({ data }))
+      .catch(error => res.status(500).json({ error }));
+  });
+  app.post('/api/add', (req, res) => {
+    apiModel.addEntry(req.headers.table, req.body)
+      .then(result => res.status(200).json({ result }))
+      .catch(error => res.status(500).json({ error }));
+  });
 } else { // Production mode:
   // make the build directory accesible to the server
   app.use(express.static('build'));

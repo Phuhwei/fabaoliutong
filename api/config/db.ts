@@ -1,5 +1,3 @@
-declare interface ObjStr { [key: string]: string; }
-
 export const database: { [key: string]: ObjStr } = {
   development: {
     host: 'localhost',
@@ -9,42 +7,87 @@ export const database: { [key: string]: ObjStr } = {
   },
 };
 
-export const dbSchema = {
+export const dbSchema: Obj = {
   area: {
-    city: '城市',
+    city: {
+      required: true,
+      alias: '城市',
+    },
   },
   order: {
     treasure_id: {
-      table: 'treasure',
-      link: 'name',
+      required: true,
+      link: {
+        table: 'treasure',
+        column: 'name',
+      },
     },
     person_id: {
-      table: 'person',
-      link: 'name',
+      required: true,
+      link: {
+        table: 'person',
+        column: 'name',
+      },
     },
-    unit_price: '单价(¥)',
-    quantity: '数量',
+    unit_price: {
+      required: true,
+      alias: '单价(¥)',
+    },
+    quantity: {
+      required: true,
+      alias: '数量',
+    },
     status_id: {
-      table: 'status',
-      link: 'name',
+      required: true,
+      link: {
+        table: 'status',
+        column: 'name',
+      },
     },
-    final_price: '确定总价($)',
-    date: '日期',
+    final_price: {
+      required: false,
+      alias: '确定总价($)',
+    },
+    date: {
+      required: false,
+      alias: '日期',
+    },
   },
   person: {
-    name: '订购人',
-    area_id: {
-      table: 'area',
-      link: 'city',
+    name: {
+      required: true,
+      alias: '订购人',
     },
-    nickname: '别称',
-    address: '地址',
+    area_id: {
+      required: true,
+      link: {
+        table: 'area',
+        column: 'city',
+      },
+    },
+    nickname: {
+      required: false,
+      alias: '别称',
+    },
+    address: {
+      required: false,
+      alias: '地址',
+    },
   },
   status: {
-    name: '状态',
+    name: {
+      required: true,
+      alias: '状态',
+    },
   },
   treasure: {
-    name: '法宝',
-    default_price: '初始价',
+    name: {
+      required: true,
+      alias: '法宝',
+    },
+    default_price: {
+      required: false,
+      alias: '初始价(¥)',
+    },
   },
 };

@@ -1,4 +1,4 @@
-import { freeQuery } from '../lib/db';
+import { freeQuery, insertOneRow } from '../lib/db';
 
 export const getAllOrders = () => {
   const sql = ['SELECT',
@@ -25,3 +25,5 @@ export const getAllOrders = () => {
 export const getTableData = (table: string) => freeQuery(
   `SELECT * FROM fabaoliutong.${table}`,
 );
+
+export const addEntry = (table: string, insertJSON: DbJSON) => insertOneRow(table, insertJSON);

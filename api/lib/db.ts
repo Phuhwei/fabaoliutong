@@ -32,7 +32,6 @@ const query = (connect: Connect, sql: string | string[], questionMark?: Array<st
       throw err;
     });
 
-interface DbJSON { [key: string]: string | number; }
 function formatSQL(inputJSON: DbJSON, conjunction: string) {
   let sql = '';
   Object.keys(inputJSON).forEach(field => {
@@ -52,7 +51,8 @@ function formatSQL(inputJSON: DbJSON, conjunction: string) {
 }
 
 const genSql = (type: string, tbl: string, tgtJSON: DbJSON, refJSON?: DbJSON) => {
-  let sql = `${type === 'insert' ? 'INSERT INTO' : 'UPDATE'} ${tbl} SET ${formatSQL(tgtJSON, ',')}`;
+  // tslint:disable-next-line:max-line-length
+  let sql = `${type === 'insert' ? 'INSERT INTO' : 'UPDATE'} ${database[env].name}.${tbl} SET ${formatSQL(tgtJSON, ',')}`;
   if (type === 'update') sql += ` WHERE ${formatSQL(refJSON, 'AND')}`;
   return sql;
 };
@@ -74,6 +74,7 @@ export const getOneTable = (table: string, referenceJSON: DbJSON, target?: strin
 
 export const insertOneRow = (table: string, insertJSON: DbJSON) => Promise.resolve().then(() => {
   const sql = genSql('insert', table, insertJSON);
+  debug(sql);
   return getConnection().then(c => query(c, sql));
 })
   .catch(err => {
