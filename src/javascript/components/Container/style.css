@@ -19,5 +19,11 @@
 
 .button {
   width: auto;
-  justify-self: right;
+  /* justify-self: right; */
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }

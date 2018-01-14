@@ -23,7 +23,7 @@ const findSize = (table: string) => {
 interface ModuleProps {
   store: Obj;
   table: string;
-  show: boolean;
+  show: { fromTable: string, fromColumn: string };
   saveToRedux: typeof actions.saveToRedux;
   requestOrders: typeof actions.requestOrders;
 }
@@ -52,10 +52,10 @@ class Edit extends React.Component<ModuleProps, State> {
   }
 
   public render() {
-    const { table, store } = this.props;
+    const { table, store, show, saveToRedux} = this.props;
     return (
       <Modal
-        show={this.props.show}
+        show={!!this.props.show}
         onHide={this.handleClose}
         bsSize={findSize(table)}
         backdrop='static'
@@ -91,9 +91,16 @@ class Edit extends React.Component<ModuleProps, State> {
                   if (table === 'order') {
                     this.props.requestOrders();
                   } else {
-                    this.props.saveToRedux({
+                    saveToRedux({
                       tableData: { [table]: store.tableData[table].concat(newEntry) },
+                      tableTemp: { [show.fromTable]: { [show.fromColumn]: `${insertId}` } },
                     });
+                    if (show.fromColumn === 'treasure_id') {
+                      const unitPrice = store.tableTemp[table].default_price;
+                      saveToRedux({
+                        tableTemp: { [show.fromTable]: { unit_price: unitPrice } },
+                      });
+                    }
                   }
                   this.handleClose();
                 })

@@ -20,3 +20,8 @@ export const insertEntry = (table: string, data: ObjStr) => request({
   headers: { table },
   body: data,
 });
+
+export const getCurrencyRate = () => request({
+  method: 'get',
+  url: 'https://api.fixer.io/latest?base=CAD',
+});

@@ -84,7 +84,10 @@ export const findColumnNames = (table: string) =>
     if (alias) return alias;
     return dbSchema[link.table][link.column].alias;
   });
+
 export const findRequiredColumns = (table: string) =>
   Object.keys(dbSchema[table]).filter((column: string) => dbSchema[table][column].required);
 
 export const wait = (time: number) => new Promise(r => setTimeout(r, time || 1000));
+
+// export const findParentLink = ()

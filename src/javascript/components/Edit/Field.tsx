@@ -12,7 +12,7 @@ interface LinkColumn {
   };
 }
 interface ModuleProps {
-  state: RootState;
+  store: RootState;
   table: string;
   column: string; // the display column name
   columnId: string; // the original column name
@@ -29,35 +29,62 @@ class Field extends React.Component<ModuleProps> {
       const { table: linkTable, column } = this.props.columnValue.link;
       this.linkTable = linkTable;
       this.linkColumn = column;
+      if (this.props.column === '状态') {
+        this.props.saveToRedux({
+          tableTemp: { [this.props.table]: { [this.props.columnId]: '1' } },
+        });
+      }
       getTableData(linkTable)
         .then((res: Obj) => this.props.saveToRedux({ tableData: { [linkTable]: res.data } }));
     }
   }
-  public handleChange(value: string) {
-    this.props.saveToRedux({
-      tableTemp: { [this.props.table]: { [this.props.columnId]: value } },
+  public handleChange = (value: string) => {
+    const { saveToRedux, table, columnId, store } = this.props;
+    saveToRedux({
+      tableTemp: { [table]: { [columnId]: value } },
     });
+    if (columnId === 'treasure_id') {
+      const unitPrice = store.tableData.treasure.filter((item: Obj) =>
+        item.id.toString() === value)[0].default_price;
+      saveToRedux({
+        tableTemp: { [table]: { unit_price: unitPrice } },
+      });
+    }
     wait(100).then(this.props.handleDisableButton);
-    // .then((res: Obj) => console.log(res[this.props.table]));
   }
+  public handleBlur = () => {
+    const { store, columnId, saveToRedux } = this.props;
+    if (['quantity', 'unit_price'].includes(columnId)) {
+      const { quantity, unit_price } = store.tableTemp.order;
+      if (quantity && unit_price) {
+        const finalPrice = Math.round((quantity * unit_price) / store.currencyRate * 100) / 100;
+        saveToRedux({
+          tableTemp: { order: { final_price: finalPrice } },
+        });
+      }
+    }
+  }
+
   public render() {
-    const { state, table, saveToRedux, columnId } = this.props;
+    const { store, table, saveToRedux, columnId, column } = this.props;
     return (
       !!this.props.columnValue.alias
         ? (
           <input
-            id={this.props.column}
-            value={state.tableTemp[table] && state.tableTemp[table][columnId] || ''}
+            id={column}
+            value={store.tableTemp[table] && store.tableTemp[table][columnId] || ''}
             onChange={evt => this.handleChange(evt.target.value)}
+            onBlur={this.handleBlur}
           />)
         : (
-          <div id={this.props.column}>
+          <div id={column}>
             <select
-              defaultValue='请选择'
+              value={store.tableTemp[table] && store.tableTemp[table][columnId] || '0'}
               onChange={evt => this.handleChange(evt.target.value)}
+              onBlur={this.handleBlur}
             >
-              <option disabled>请选择</option>
-              {(state.tableData[this.linkTable] || []).map((opt: Obj) =>
+              <option value='0' disabled>请选择</option>
+              {(store.tableData[this.linkTable] || []).map((opt: Obj) =>
                 <option key={opt.id} value={opt.id}>
                   {opt[this.linkColumn]}
                 </option>)}
@@ -65,7 +92,14 @@ class Field extends React.Component<ModuleProps> {
             <button
               onClick={evt => {
                 evt.preventDefault();
-                saveToRedux({ showModal: { [this.linkTable]: true } });
+                saveToRedux({
+                  showModal: {
+                    [this.linkTable]: {
+                      fromTable: table,
+                      fromColumn: columnId,
+                    },
+                  },
+                });
               }}
             >新建
             </button>
@@ -75,6 +109,6 @@ class Field extends React.Component<ModuleProps> {
 }
 
 export default connect(
-  (state: RootState) => ({ state }),
+  (store: RootState) => ({ store }),
   { saveToRedux: actions.saveToRedux },
 )(Field);
