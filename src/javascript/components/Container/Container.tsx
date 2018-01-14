@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { dbSchema } from '../../../../api/config';
 import * as actions from '../../redux/actions';
 import Display from '../Display';
 import Edit from '../Edit';
@@ -21,7 +22,9 @@ export const Container = (props: ModuleProps) => (
       >新建
       </button>
       <Display table={table} />
-      <Edit table={table} show={props.state.showModal[table]} />
+      {Object.keys(dbSchema).map(tbl => (
+        <Edit key={tbl} table={tbl} show={props.state.showModal[tbl]} />
+      ))}
     </section>
   </article >
 );

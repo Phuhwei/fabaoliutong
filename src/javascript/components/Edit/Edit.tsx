@@ -15,7 +15,7 @@ interface ModuleProps {
 }
 class Edit extends React.Component<ModuleProps> {
   public columnList = findColumnNames(dbSchema, this.props.table);
-  public rawColumnName = Object.keys((dbSchema as Obj)[this.props.table]);
+  public columnIdList = Object.keys((dbSchema as Obj)[this.props.table]);
   public render() {
     const { table } = this.props;
     return (
@@ -36,7 +36,8 @@ class Edit extends React.Component<ModuleProps> {
                 <Field
                   table={table}
                   column={column}
-                  columnValue={(dbSchema as Obj)[table][this.rawColumnName[index]]}
+                  columnId={this.columnIdList[index]}
+                  columnValue={(dbSchema as Obj)[table][this.columnIdList[index]]}
                 />
               </div>
             ))}

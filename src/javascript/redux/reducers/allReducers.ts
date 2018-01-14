@@ -5,6 +5,7 @@ const env = process.env.NODE_ENV;
 const initialState = {
   orderList: [] as Obj[],
   showModal: {},
+  tableTemp: {},
 };
 
 export default (state = initialState, action: any) => {
