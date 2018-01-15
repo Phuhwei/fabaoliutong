@@ -1,14 +1,14 @@
-import { freeQuery, insertOneRow } from '../lib/db';
+import { freeQuery, insertOneRow, insertMultipleRows } from '../lib/db';
 
 export const getAllOrders = () => {
   const sql = ['SELECT',
-    'treasure.name as 法宝,',
     'person.name as 订购人,',
+    'treasure.name as 法宝,',
     "o.unit_price_RMB as '单价(¥)',",
     "o.unit_price_CAD as '单价($)',",
     'o.quantity as 数量,',
     'st.name as 状态,',
-    "o.final_price as '确定总价($)',",
+    "o.final_price as '总价($)',",
     'o.date as 日期',
     'FROM',
     'fabaoliutong.order as o,',
@@ -28,4 +28,6 @@ export const getTableData = (table: string) => freeQuery(
   `SELECT * FROM fabaoliutong.${table}`,
 );
 
-export const addEntry = (table: string, insertJSON: DbJSON) => insertOneRow(table, insertJSON);
+export const addEntry = (table: string, data: DbJSON, isMultiple?: boolean) => isMultiple
+  ? insertMultipleRows(table, data.fields, data.valueSets)
+  : insertOneRow(table, data);

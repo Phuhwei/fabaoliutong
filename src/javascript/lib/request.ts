@@ -14,10 +14,10 @@ export const getTableData = (table: string) => request({
   headers: { table },
 });
 
-export const insertEntry = (table: string, data: ObjStr) => request({
+export const insertEntry = (table: string, data: ObjStr, isMultiple?: boolean) => request({
   method: 'post',
   url: `${frontend[env]}/api/add`,
-  headers: { table },
+  headers: isMultiple ? { table, multiple: true } : { table },
   body: data,
 });
 

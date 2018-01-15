@@ -82,6 +82,19 @@ export const insertOneRow = (table: string, insertJSON: DbJSON) => Promise.resol
     throw err;
   });
 
+/* valueSets: array of "('value1', 'value2', 'value3','value4')" */
+export const insertMultipleRows = (table: string, fields: string[], valueSets: string[]) =>
+  Promise.resolve().then(() => {
+    const columns = fields.map(column => `\`${column}\``);
+    // tslint:disable-next-line:max-line-length
+    const sql = `INSERT INTO ${table} (${columns.join(', ')}) VALUES ${valueSets.map(() => `(${columns.map(() => '?').join(', ')})`).join(', ')}`;
+    return getConnection().then(c => query(c, sql, [].concat(...valueSets)));
+  })
+    .catch(e => {
+      debug("'insertMultipleRows' Error");
+      throw e;
+    });
+
 interface Query {
   method: string;
   table: string;

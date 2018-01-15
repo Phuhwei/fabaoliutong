@@ -46,7 +46,7 @@ if (nodeEnv === 'development') {
       .catch(error => res.status(500).json({ error }));
   });
   app.post('/api/add', (req, res) => {
-    apiModel.addEntry(req.headers.table, req.body)
+    apiModel.addEntry(req.headers.table, req.body, !!req.headers.multiple)
       .then(result => res.status(200).json({ result }))
       .catch(error => res.status(500).json({ error }));
   });

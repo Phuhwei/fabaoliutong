@@ -15,17 +15,17 @@ export const dbSchema: Obj = {
     },
   },
   order: {
-    treasure_id: {
-      required: true,
-      link: {
-        table: 'treasure',
-        column: 'name',
-      },
-    },
     person_id: {
       required: true,
       link: {
         table: 'person',
+        column: 'name',
+      },
+    },
+    treasure_id: {
+      required: true,
+      link: {
+        table: 'treasure',
         column: 'name',
       },
     },
@@ -50,7 +50,7 @@ export const dbSchema: Obj = {
     },
     final_price: {
       required: false,
-      alias: '确定总价($)',
+      alias: '总价($)',
     },
     date: {
       required: false,
@@ -71,7 +71,7 @@ export const dbSchema: Obj = {
     },
     nickname: {
       required: false,
-      alias: '别称',
+      alias: '昵称',
     },
     address: {
       required: false,

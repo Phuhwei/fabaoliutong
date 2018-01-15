@@ -62,7 +62,7 @@ class Edit extends React.Component<ModuleProps, State> {
         backdrop='static'
       >
         <Modal.Header closeButton>
-          <h2>Edit {table.toUpperCase()}</h2>
+          <h2>Add {table.toUpperCase()}</h2>
         </Modal.Header>
         <Modal.Body>
           <form>
