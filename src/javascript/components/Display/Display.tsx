@@ -35,33 +35,35 @@ class Display extends React.Component<ModuleProps> {
     const { store: { sortOrder } } = this.props;
     return (
       <section>
-        <div className={style.row}>
-          {this.columnList.map(name => (
-            <span
-              key={name}
-              style={{ width: this.columnWidth }}
-              className={style.field}
-              onClick={() => this.handleSort(name)}
-            >{name}
-              {name === sortOrder.sortBy &&
-                <div className={style[`sort${sortOrder.direction ? 'Up' : 'Down'}`]} />}
-            </span>
-          ))}
-        </div>
-        {this.sortOrder(sortOrder.sortBy, sortOrder.direction).map((order: Obj) => (
-          <div key={order.日期} className={style.row}>
-            {this.columnList.map(term => (
-              <span
-                key={term}
-                style={{ width: this.columnWidth }}
-                className={style.field}
-              >{term === '日期'
-                ? order[term].substr(0, 10)
-                : order[term]}
-              </span>
+        <table className={style.table}>
+          <tbody>
+            <tr>
+              {this.columnList.map(name => (
+                <th
+                  key={name}
+                  // style={{ width: this.columnWidth }}
+                  onClick={() => this.handleSort(name)}
+                >{name}
+                  {name === sortOrder.sortBy &&
+                    <div className={style[`sort${sortOrder.direction ? 'Up' : 'Down'}`]} />}
+                </th>
+              ))}
+            </tr>
+            {this.sortOrder(sortOrder.sortBy, sortOrder.direction).map((order: Obj) => (
+              <tr key={order.日期}>
+                {this.columnList.map(term => (
+                  <td
+                    key={term}
+                    // style={{ width: this.columnWidth }}
+                  >{term === '日期'
+                    ? order[term].substr(0, 10)
+                    : order[term]}
+                  </td>
+                ))}
+              </tr>
             ))}
-          </div>
-        ))}
+          </tbody>
+        </table>
       </section>
     );
   }
