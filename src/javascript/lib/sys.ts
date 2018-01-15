@@ -54,4 +54,6 @@ export const findRequiredColumns = (table: string) =>
 
 export const wait = (time: number) => new Promise(r => setTimeout(r, time || 1000));
 
+export const mathRound = (num: number) => Math.round(num * 100) / 100;
+
 // export const findParentLink = ()

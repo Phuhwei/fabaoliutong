@@ -29,9 +29,13 @@ export const dbSchema: Obj = {
         column: 'name',
       },
     },
-    unit_price: {
+    unit_price_RMB: {
       required: true,
       alias: '单价(¥)',
+    },
+    unit_price_CAD: {
+      required: true,
+      alias: '单价($)',
     },
     quantity: {
       required: true,
@@ -85,9 +89,17 @@ export const dbSchema: Obj = {
       required: true,
       alias: '法宝',
     },
-    default_price: {
+    alias: {
+      required: false,
+      alias: '别称',
+    },
+    default_price_RMB: {
       required: false,
       alias: '初始价(¥)',
+    },
+    default_price_CAD: {
+      required: true,
+      alias: '初始价($)',
     },
   },
 };

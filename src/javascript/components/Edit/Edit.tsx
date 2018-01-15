@@ -97,9 +97,15 @@ class Edit extends React.Component<ModuleProps, State> {
                       tableTemp: { [show.fromTable]: { [show.fromColumn]: `${insertId}` } },
                     });
                     if (show.fromColumn === 'treasure_id') {
-                      const unitPrice = store.tableTemp[table].default_price;
+                      const unitPriceRMB = store.tableTemp[table].default_price_RMB;
+                      const unitPriceCAD = store.tableTemp[table].default_price_CAD;
                       saveToRedux({
-                        tableTemp: { [show.fromTable]: { unit_price: unitPrice } },
+                        tableTemp: {
+                          [show.fromTable]: {
+                            unit_price_RMB: unitPriceRMB,
+                            unit_price_CAD: unitPriceCAD,
+                          },
+                        },
                       });
                     }
                   }

@@ -41,7 +41,6 @@ class Display extends React.Component<ModuleProps> {
               {this.columnList.map(name => (
                 <th
                   key={name}
-                  // style={{ width: this.columnWidth }}
                   onClick={() => this.handleSort(name)}
                 >{name}
                   {name === sortOrder.sortBy &&

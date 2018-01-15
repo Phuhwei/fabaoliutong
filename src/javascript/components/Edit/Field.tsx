@@ -1,6 +1,7 @@
+import { merge } from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getTableData, wait } from '../../lib';
+import { getTableData, mathRound, wait } from '../../lib';
 import * as actions from '../../redux/actions';
 
 interface LinkColumn {
@@ -43,26 +44,39 @@ class Field extends React.Component<ModuleProps> {
     saveToRedux({
       tableTemp: { [table]: { [columnId]: value } },
     });
-    if (columnId === 'treasure_id') {
-      const unitPrice = store.tableData.treasure.filter((item: Obj) =>
-        item.id.toString() === value)[0].default_price;
+    /* auto fill CAD price */
+    if (columnId === 'default_price_RMB') {
+      // tslint:disable-next-line:variable-name
+      const default_price_CAD = mathRound(parseFloat(value) / store.currencyRate);
       saveToRedux({
-        tableTemp: { [table]: { unit_price: unitPrice } },
+        tableTemp: { treasure: { default_price_CAD } },
       });
     }
-    wait(100).then(this.props.handleDisableButton);
-  }
-  public handleBlur = () => {
-    const { store, columnId, saveToRedux } = this.props;
-    if (['quantity', 'unit_price'].includes(columnId)) {
-      const { quantity, unit_price } = store.tableTemp.order;
-      if (quantity && unit_price) {
-        const finalPrice = Math.round((quantity * unit_price) / store.currencyRate * 100) / 100;
+    /* auto fill total price */
+    if (['quantity', 'unit_price_CAD'].includes(columnId)) {
+      const { quantity, unit_price_CAD } = merge(store.tableTemp.order, { [columnId]: value });
+      if (quantity && unit_price_CAD) {
         saveToRedux({
-          tableTemp: { order: { final_price: finalPrice } },
+          tableTemp: { order: { final_price: mathRound(quantity * unit_price_CAD) } },
         });
       }
     }
+    /* auto get the default price of that treasure, and fill the unit prices */
+    if (columnId === 'treasure_id') {
+      const matchTreasure: Obj = store.tableData.treasure.filter((item: Obj) =>
+        item.id.toString() === value)[0];
+      const unitPriceRMB = matchTreasure.default_price_RMB;
+      const unitPriceCAD = matchTreasure.default_price_CAD;
+      saveToRedux({
+        tableTemp: {
+          [table]: {
+            unit_price_RMB: unitPriceRMB,
+            unit_price_CAD: unitPriceCAD,
+          },
+        },
+      });
+    }
+    wait(100).then(this.props.handleDisableButton);
   }
 
   public render() {
@@ -74,14 +88,12 @@ class Field extends React.Component<ModuleProps> {
             id={column}
             value={store.tableTemp[table] && store.tableTemp[table][columnId] || ''}
             onChange={evt => this.handleChange(evt.target.value)}
-            onBlur={this.handleBlur}
           />)
         : (
           <div id={column}>
             <select
               value={store.tableTemp[table] && store.tableTemp[table][columnId] || '0'}
               onChange={evt => this.handleChange(evt.target.value)}
-              onBlur={this.handleBlur}
             >
               <option value='0' disabled>请选择</option>
               {(store.tableData[this.linkTable] || []).map((opt: Obj) =>
