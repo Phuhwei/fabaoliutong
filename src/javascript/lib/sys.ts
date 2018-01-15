@@ -1,3 +1,4 @@
+import { merge } from 'lodash';
 import * as superagent from 'superagent';
 import { dbSchema } from '../../../api/config';
 
@@ -36,47 +37,10 @@ export const request = (args: RequestArgs) => new Promise((resolve, reject) => {
   }, args.timeout || 8000);
   return req.then(res => {
     reqSuccess = true;
-    resolve(merge(res.body, { status: res.status }));
+    resolve(merge({}, res.body, { status: res.status }));
   })
     .catch(err => reject(err));
 });
-
-function hasObject(obj: Obj) {
-  if (obj == null) { return null; }
-  const objects = [] as string[];
-  Object.keys(obj).forEach(item => {
-    if (obj[item] == null) { return; }
-    if (obj[item].constructor.name === 'Object') { objects.push(item); }
-  });
-  return objects[0] ? objects : null;
-}
-
-function arrangeSource(source: Obj, sourceKeys: string[]) {
-  const obj = source;
-  sourceKeys.forEach(item => {
-    if (source[item] === undefined) { delete obj[item]; }
-  });
-  return obj;
-}
-
-export function merge(destin: Obj, source: Obj) {
-  if (source === null) {
-    return null;
-  } else if (source === undefined) {
-    return destin;
-  } else if (source.constructor.name !== 'Object') {
-    return source;
-  }
-  const sourceKeys = Object.keys(source);
-  if (sourceKeys.length === 0) { return destin; }
-  const sourceObj = arrangeSource(source, sourceKeys);
-  const objectItems = hasObject(destin);
-  if (!objectItems) { return Object.assign({}, destin, sourceObj); }
-  objectItems.forEach(item => {
-    sourceObj[item] = merge(destin[item], sourceObj[item]);
-  });
-  return Object.assign({}, destin, sourceObj);
-}
 
 export const findColumnNames = (table: string) =>
   Object.keys(dbSchema[table]).map((column: string) => {

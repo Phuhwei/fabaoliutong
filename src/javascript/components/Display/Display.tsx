@@ -22,7 +22,7 @@ class Display extends React.Component<ModuleProps> {
     const { store: { tableData: { order } } } = this.props;
     if (!order) return [];
     const sorted = sortBy(order, [sortedBy]);
-    return direction ? sorted.reverse() : sorted;
+    return direction ? sorted : sorted.reverse();
   }
   public handleSort = (name: string) => {
     const { store: { sortOrder }, saveToRedux } = this.props;

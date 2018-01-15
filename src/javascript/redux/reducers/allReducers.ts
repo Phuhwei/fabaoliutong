@@ -1,11 +1,11 @@
-import { merge } from '../../lib';
+import { merge } from 'lodash';
 
 // const env = process.env.NODE_ENV;
 
 export const initialState = {
   sortOrder: {
     sortBy: '日期',
-    direction: '', // true: Down; false: Up;
+    direction: '', // true: Up; false: Down;
   },
   showModal: {},
   tableTemp: {},
@@ -18,7 +18,7 @@ export default (state = initialState, action: any) => {
       return initialState;
     }
     case 'SAVE_STORE':
-      return merge(state, action.payload);
+      return merge({}, state, action.payload);
     default: return state;
   }
 };

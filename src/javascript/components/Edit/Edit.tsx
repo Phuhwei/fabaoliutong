@@ -1,9 +1,10 @@
+import { merge } from 'lodash';
 import * as React from 'react';
 import { Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { dbSchema } from '../../../../api/config';
 import {
-  findColumnNames, findRequiredColumns, insertEntry, merge,
+  findColumnNames, findRequiredColumns, insertEntry,
 } from '../../lib';
 import * as actions from '../../redux/actions';
 import Field from './Field';
@@ -52,7 +53,7 @@ class Edit extends React.Component<ModuleProps, State> {
   }
 
   public render() {
-    const { table, store, show, saveToRedux} = this.props;
+    const { table, store, show, saveToRedux } = this.props;
     return (
       <Modal
         show={!!this.props.show}
