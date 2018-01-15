@@ -5,6 +5,27 @@
 }
 
 .field {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   border: 1px solid var(--very-light-grey);
+}
+
+.sortDown {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 6px solid black;
+}
+
+.sortUp {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 6px solid black;
 }

@@ -3,6 +3,10 @@ import { merge } from '../../lib';
 // const env = process.env.NODE_ENV;
 
 export const initialState = {
+  sortOrder: {
+    sortBy: '日期',
+    direction: '', // true: Down; false: Up;
+  },
   showModal: {},
   tableTemp: {},
   tableData: {},
