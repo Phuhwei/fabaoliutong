@@ -60,12 +60,12 @@
     "stop": "pkill fabaoliutong",
     "build_api": "tsc -p 'tsconfig_api.json'",
     "build": "npm run build_api; webpack;",
-    "dev_run": "export DEBUG='dev:*' && NODE_ENV='development' node server.js",
-    "dev": "npm run build; npm run dev_run",
-    "build_staging": "NODE_ENV='staging' webpack -p --progress",
-    "build_prod": "NODE_ENV='production' webpack -p --progress",
+    "start:dev": "export DEBUG='dev:*' && NODE_ENV='development' node server.js",
+    "dev": "npm run build; npm run start:dev",
+    "build:staging": "NODE_ENV='staging' webpack -p --progress",
+    "build:prod": "NODE_ENV='production' webpack -p --progress",
     "staging": "npm run staging_build && NODE_ENV='staging' node server.js",
-    "start": "npm run prod_build && NODE_ENV='production' node server.js",
+    "start": "npm run build:prod && NODE_ENV='production' node server.js",
     "test": "NODE_ENV=test ava --watch"
   }
 }

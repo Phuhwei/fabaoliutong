@@ -5,6 +5,12 @@ export const database: { [key: string]: ObjStr } = {
     user: 'root',
     password: 'root',
   },
+  production: {
+    host: 'localhost',
+    name: 'fabaoliutong',
+    user: 'root',
+    password: '',
+  },
 };
 
 export const dbSchema: Obj = {

@@ -66,7 +66,6 @@ const VENDOR_LIBS = [
   'redux',
   'redux-thunk',
   'superagent',
-  'validator',
 ];
 
 const isVendor = module => (
