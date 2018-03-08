@@ -7,6 +7,12 @@ exports.database = {
         user: 'root',
         password: 'root',
     },
+    production: {
+        host: 'localhost',
+        name: 'fabaoliutong',
+        user: 'root',
+        password: 'root',
+    },
 };
 exports.dbSchema = {
     area: {

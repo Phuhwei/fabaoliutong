@@ -25,7 +25,9 @@ exports.getAllOrders = function () {
     return db_1.freeQuery(sql);
 };
 exports.getTableData = function (table) { return db_1.freeQuery("SELECT * FROM fabaoliutong." + table); };
-exports.addEntry = function (table, data, isMultiple) { return isMultiple
-    ? db_1.insertMultipleRows(table, data.fields, data.valueSets)
-    : db_1.insertOneRow(table, data); };
+exports.addEntry = function (table, data, isMultiple) {
+    return isMultiple
+        ? db_1.insertMultipleRows(table, data.fields, data.valueSets)
+        : db_1.insertOneRow(table, data);
+};
 //# sourceMappingURL=index.js.map
