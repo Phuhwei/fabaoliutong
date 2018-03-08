@@ -3,6 +3,7 @@ const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const apiModel = require('./api/model');
+const bodyParser = require('body-parser');
 
 
 const app = express();
@@ -11,6 +12,9 @@ process.title = 'corl_fe';
 
 // make the build directory accesible to the server
 const dir = loc => (path.join(__dirname, loc));
+
+app.use(bodyParser.json());
+
 app.use(express.static('./'));
 // catch all routes
 app.post('/api/order', (req, res) => {
@@ -30,6 +34,6 @@ app.post('/api/add', (req, res) => {
 });
 app.get('*', (req, res) => res.sendFile(dir('index.html')));
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3100;
 
-app.listen(port, () => console.log(`listening port: ${port}...`));
+app.listen(port, () => console.log(`fabaoliutong listening port: ${port}...`));
