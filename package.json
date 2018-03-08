@@ -1,0 +1,16 @@
+{
+  "name": "fabaoliutong system",
+  "version": "0.1.0",
+  "description": "fa bao liu tong xi tong",
+  "author": "Lian",
+  "dependencies": {
+    "express": "^4.15.2",
+    "morgan": "^1.8.1"
+  },
+  
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  }
+}
+ 
