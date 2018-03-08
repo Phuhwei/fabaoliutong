@@ -5,7 +5,10 @@
   "author": "Lian",
   "dependencies": {
     "express": "^4.15.2",
-    "morgan": "^1.8.1"
+    "morgan": "^1.8.1",
+    "debug": "^3.1.0",
+    "promise-mysql": "^3.1.5",
+    "superagent": "^3.8.2"
   },
   
   "scripts": {
