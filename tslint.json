@@ -31,7 +31,8 @@
       true,
       "ignore-same-line"
     ],
-    "no-unused-variable": true
+    "no-unused-variable": true,
+    "variable-name": false,
   },
   "rulesDirectory": []
 }

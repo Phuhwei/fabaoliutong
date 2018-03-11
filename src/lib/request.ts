@@ -1,22 +1,20 @@
-import { frontend } from '../../config';
 import { request } from './sys';
-
-const env = process.env.NODE_ENV as 'development' | 'staging';
 
 export const getOrders = () => request({
   method: 'post',
-  url: `${frontend[env]}/api/order`,
+  url: '/api/order',
 });
 
+/* get different table by header */
 export const getTableData = (table: string) => request({
   method: 'post',
-  url: `${frontend[env]}/api/table`,
+  url: '/api/table',
   headers: { table },
 });
 
 export const insertEntry = (table: string, data: ObjStr, isMultiple?: boolean) => request({
   method: 'post',
-  url: `${frontend[env]}/api/add`,
+  url: '/api/add',
   headers: isMultiple ? { table, multiple: true } : { table },
   body: data,
 });

@@ -9,7 +9,7 @@ export const database: { [key: string]: ObjStr } = {
     host: 'localhost',
     name: 'fabaoliutong',
     user: 'root',
-    password: '',
+    password: 'root',
   },
 };
 

@@ -32,6 +32,9 @@ const query = (connect: Connect, sql: string | string[], questionMark?: Array<st
       throw err;
     });
 
+declare interface DbJSON {
+  [key: string]: string | number;
+}
 function formatSQL(inputJSON: DbJSON, conjunction: string) {
   let sql = '';
   Object.keys(inputJSON).forEach(field => {
@@ -116,7 +119,8 @@ export const updateOneRow = (table: string, refJSON: DbJSON, tarJSON: DbJSON, mu
     });
 
 export const freeQuery = (sql: string, values?: Array<string | number>) =>
-  getConnection().then(c => query(c, sql, values))
+  getConnection()
+    .then(c => query(c, sql, values))
     .catch(err => {
       debug("'freeQuery' Error");
       throw err;

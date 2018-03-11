@@ -4,7 +4,7 @@
     "noUnusedParameters": true,
     "module": "commonjs",
     "target": "es5",
-    "sourceMap": true,
+    "sourceMap": false,
     "allowJs": true,
     "noImplicitAny": true,
     "removeComments": true,

@@ -22,8 +22,11 @@
     "superagent": "^3.8.2"
   },
   "devDependencies": {
+    "@types/body-parser": "^1.16.8",
     "@types/debug": "^0.0.30",
+    "@types/express": "^4.11.1",
     "@types/lodash": "^4.14.92",
+    "@types/morgan": "^1.7.35",
     "@types/prop-types": "^15.5.2",
     "@types/react": "^16.0.34",
     "@types/react-bootstrap": "^0.31.9",
@@ -59,13 +62,12 @@
   "scripts": {
     "stop": "pkill fabaoliutong",
     "build_api": "tsc -p 'tsconfig_api.json'",
-    "build": "npm run build_api; webpack;",
-    "start:dev": "export DEBUG='dev:*' && NODE_ENV='development' node server.js",
-    "dev": "npm run build; npm run start:dev",
-    "build:staging": "NODE_ENV='staging' webpack -p --progress",
-    "build:prod": "NODE_ENV='production' webpack -p --progress",
-    "staging": "npm run staging_build && NODE_ENV='staging' node server.js",
-    "start": "npm run build:prod && NODE_ENV='production' node server.js",
+    "build:dev": "npm run build_api; cp -R server build/; webpack",
+    "dev": "npm run build:dev; npm run start:dev",
+    "start:dev": "export DEBUG='dev:*' && NODE_ENV='development' node server",
+    "build:prod": "NODE_ENV='production' webpack -p --progress; cp -R server build_production/",
+    "prod": "npm run build:prod && npm start",
+    "start": "cd build_production && NODE_ENV='production' node server",
     "test": "NODE_ENV=test ava --watch"
   }
 }

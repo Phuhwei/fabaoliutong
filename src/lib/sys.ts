@@ -1,6 +1,6 @@
 import { merge } from 'lodash';
 import * as superagent from 'superagent';
-import { dbSchema } from '../../../api/config';
+import { dbSchema } from '../../server/config';
 
 const env = process.env.NODE_ENV;
 

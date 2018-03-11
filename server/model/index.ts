@@ -1,4 +1,4 @@
-import { freeQuery, insertOneRow, insertMultipleRows } from '../lib/db';
+import { freeQuery, insertMultipleRows, insertOneRow } from '../lib/db';
 
 export const getAllOrders = () => {
   const sql = ['SELECT',
@@ -28,6 +28,15 @@ export const getTableData = (table: string) => freeQuery(
   `SELECT * FROM fabaoliutong.${table}`,
 );
 
-export const addEntry = (table: string, data: DbJSON, isMultiple?: boolean) => isMultiple
-  ? insertMultipleRows(table, data.fields, data.valueSets)
-  : insertOneRow(table, data);
+declare interface DbJSON {
+  [key: string]: string | number;
+}
+declare interface MultiJSON  {
+  fields: string[];
+  valueSets: string[];
+}
+
+export const addEntry = (table: string, data: DbJSON | MultiJSON, isMultiple?: boolean) =>
+  isMultiple
+    ? insertMultipleRows(table, (data as MultiJSON).fields, (data as MultiJSON).valueSets)
+    : insertOneRow(table, data as DbJSON);

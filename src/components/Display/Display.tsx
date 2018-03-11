@@ -50,15 +50,13 @@ class Display extends React.Component<ModuleProps> {
             </tr>
             {this.sortOrder(sortOrder.sortBy, sortOrder.direction).map((order: Obj) => (
               <tr key={order.日期}>
-                {this.columnList.map(term => (
-                  <td
-                    key={term}
-                    // style={{ width: this.columnWidth }}
-                  >{term === '日期'
+                {this.columnList.map(term => {
+                  const value = term === '日期'
                     ? order[term].substr(0, 10)
-                    : order[term]}
-                  </td>
-                ))}
+                    : order[term];
+                  console.log('ici');
+                  return <td key={term} >{value}</td>
+                })}
               </tr>
             ))}
           </tbody>

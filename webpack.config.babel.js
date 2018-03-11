@@ -35,7 +35,7 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
 const PATHS = {
   // this app will be the entry point;
   app: [
-    path.join(__dirname, 'src/javascript/index.tsx'),
+    path.join(__dirname, 'src/index.tsx'),
     path.join(__dirname, 'src/css/shared.css'),
   ],
   // this will be the output path;
@@ -97,7 +97,6 @@ const base = {
     errorDetails: true,
   },
   resolve: {
-    modules: ['node_modules'],
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.css'],
   },
   module: {

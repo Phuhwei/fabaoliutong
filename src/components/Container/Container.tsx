@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { dbSchema } from '../../../../api/config';
+import { dbSchema } from '../../../server/config';
 import { getCurrencyRate } from '../../lib';
 import * as actions from '../../redux/actions';
 import Display from '../Display';

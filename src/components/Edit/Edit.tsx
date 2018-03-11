@@ -2,7 +2,7 @@ import { merge } from 'lodash';
 import * as React from 'react';
 import { Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import { dbSchema } from '../../../../api/config';
+import { dbSchema } from '../../../server/config';
 import {
   findColumnNames, findRequiredColumns, insertEntry,
 } from '../../lib';
