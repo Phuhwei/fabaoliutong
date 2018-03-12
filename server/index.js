@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var path = require("path");
+var bodyParser = require("body-parser");
 var express = require("express");
 var morgan = require("morgan");
-var bodyParser = require("body-parser");
+var path = require("path");
 var apiModel = require("./model");
 var app = express();
 app.use(morgan('tiny'));
@@ -46,6 +46,11 @@ app.post('/api/table', function (req, res) {
 });
 app.post('/api/add', function (req, res) {
     apiModel.addEntry(req.headers.table, req.body, !!req.headers.multiple)
+        .then(function (result) { return res.status(200).json({ result: result }); })
+        .catch(function (error) { return res.status(500).json({ error: error }); });
+});
+app.post('/api/update', function (req, res) {
+    apiModel.updateEntry(req.headers.table, req.body)
         .then(function (result) { return res.status(200).json({ result: result }); })
         .catch(function (error) { return res.status(500).json({ error: error }); });
 });

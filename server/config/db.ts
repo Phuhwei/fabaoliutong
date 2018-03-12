@@ -36,7 +36,7 @@ export const dbSchema: Obj = {
       },
     },
     unit_price_RMB: {
-      required: true,
+      required: false,
       alias: '单价(¥)',
     },
     unit_price_CAD: {

@@ -1,9 +1,10 @@
-import { freeQuery, insertMultipleRows, insertOneRow } from '../lib/db';
+import { freeQuery, insertMultipleRows, insertOneRow, updateOneRow } from '../lib/db';
 
 export const getAllOrders = () => {
   const sql = ['SELECT',
     'person.name as 订购人,',
     'treasure.name as 法宝,',
+    'o.id,',
     "o.unit_price_RMB as '单价(¥)',",
     "o.unit_price_CAD as '单价($)',",
     'o.quantity as 数量,',
@@ -35,8 +36,10 @@ declare interface MultiJSON  {
   fields: string[];
   valueSets: string[];
 }
-
 export const addEntry = (table: string, data: DbJSON | MultiJSON, isMultiple?: boolean) =>
   isMultiple
     ? insertMultipleRows(table, (data as MultiJSON).fields, (data as MultiJSON).valueSets)
     : insertOneRow(table, data as DbJSON);
+
+export const updateEntry = (table: string, data: Obj) =>
+  updateOneRow(table, data.ref, data.target);

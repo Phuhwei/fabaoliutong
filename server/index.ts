@@ -1,7 +1,7 @@
-import path = require('path');
+import bodyParser = require('body-parser');
 import express = require('express');
 import morgan = require('morgan');
-import bodyParser = require('body-parser');
+import path = require('path');
 import apiModel = require('./model');
 
 const app = express();
@@ -33,7 +33,6 @@ if (nodeEnv === 'development') {
   app.use(webpackHotMiddleware(webpackCompiler, {
     log: console.log, path: '/__webpack_hmr', heartbeat: 10 * 1000,
   }));
-  // app.get('*', (_req: any, res: any) => res.sendFile(path.join(__dirname, '../build/index.html')));
 
 } else { // Production mode:
   // make the build directory accesible to the server
@@ -53,6 +52,11 @@ app.post('/api/table', (req: any, res: any) => {
 });
 app.post('/api/add', (req: any, res: any) => {
   apiModel.addEntry(req.headers.table, req.body, !!req.headers.multiple)
+    .then((result: any) => res.status(200).json({ result }))
+    .catch((error: any) => res.status(500).json({ error }));
+});
+app.post('/api/update', (req: any, res: any) => {
+  apiModel.updateEntry(req.headers.table, req.body)
     .then((result: any) => res.status(200).json({ result }))
     .catch((error: any) => res.status(500).json({ error }));
 });

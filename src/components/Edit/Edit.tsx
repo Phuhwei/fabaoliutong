@@ -2,13 +2,30 @@ import { merge } from 'lodash';
 import * as React from 'react';
 import { Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 import { dbSchema } from '../../../server/config';
 import {
   findColumnNames, findRequiredColumns, insertEntry,
 } from '../../lib';
 import * as actions from '../../redux/actions';
 import Field from './Field';
-const style = require('./style.css');
+// const style = require('./style.css');
+
+const EditForm = styled.div`
+  display: flex;
+  >label {
+    width: 100px
+  }
+  input, select {
+    width: 150px;
+  }
+`;
+
+const Button = styled.button`
+  :disabled {
+    opacity: 0.3;
+  }
+`;
 
 const findSize = (table: string) => {
   switch (table) {
@@ -35,16 +52,22 @@ class Edit extends React.Component<ModuleProps, State> {
   public state: State = {
     disableButton: true,
   };
-  public columnList = findColumnNames(this.props.table);
+  public columnAlias = findColumnNames(this.props.table);
   public requiredColumnList = findRequiredColumns(this.props.table);
   public columnIdList = Object.keys(dbSchema[this.props.table]);
+
+  /* Toggle disable button under different cases: */
   public handleDisableButton = () => {
     const { store, table } = this.props;
-    const validFieldNum = this.requiredColumnList
-      .map(column => store.tableTemp[table][column])
-      .filter(value => !!value);
-    this.setState({ disableButton: this.requiredColumnList.length !== validFieldNum.length });
+    const isValid = () => {
+      for (const item of this.requiredColumnList) {
+        if (!store.tableTemp[table][item]) return false;
+      }
+      return true;
+    };
+    this.setState({ disableButton: !isValid() });
   }
+
   public handleClose = () => {
     this.props.saveToRedux({
       showModal: { [this.props.table]: false },
@@ -66,22 +89,20 @@ class Edit extends React.Component<ModuleProps, State> {
         </Modal.Header>
         <Modal.Body>
           <form>
-            {this.columnList.map((column, index) => (column !== '日期' &&
-              <div key={column} className={style.field}>
-                <label htmlFor={column}>{`${column}:`}</label>
+            {this.columnIdList.map((column, index) => (column !== 'date' &&
+              <EditForm key={column}>
+                <label htmlFor={column}>{`${this.columnAlias[index]}:`}</label>
                 <Field
                   table={table}
                   column={column}
-                  columnId={this.columnIdList[index]}
-                  columnValue={dbSchema[table][this.columnIdList[index]]}
                   handleDisableButton={this.handleDisableButton}
                 />
-              </div>
+              </EditForm>
             ))}
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <button
+          <Button
             disabled={this.state.disableButton}
             onClick={evt => {
               evt.preventDefault();
@@ -111,11 +132,12 @@ class Edit extends React.Component<ModuleProps, State> {
                   }
                   this.handleClose();
                 })
+                // tslint:disable-next-line:no-console
                 .catch(e => console.error(e));
             }}
           >
             保存
-          </button>
+          </Button>
         </Modal.Footer>
       </Modal >
     );

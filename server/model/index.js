@@ -5,6 +5,7 @@ exports.getAllOrders = function () {
     var sql = ['SELECT',
         'person.name as 订购人,',
         'treasure.name as 法宝,',
+        'o.id,',
         "o.unit_price_RMB as '单价(¥)',",
         "o.unit_price_CAD as '单价($)',",
         'o.quantity as 数量,',
@@ -29,4 +30,7 @@ exports.addEntry = function (table, data, isMultiple) {
     return isMultiple
         ? db_1.insertMultipleRows(table, data.fields, data.valueSets)
         : db_1.insertOneRow(table, data);
+};
+exports.updateEntry = function (table, data) {
+    return db_1.updateOneRow(table, data.ref, data.target);
 };

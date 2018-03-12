@@ -1,3 +1,5 @@
-import module from './Edit';
+import Edit from './Edit';
+import Field from './Field';
 
-export default module;
+export default Edit;
+export { Field };

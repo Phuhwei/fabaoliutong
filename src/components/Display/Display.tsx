@@ -1,8 +1,10 @@
 import { sortBy } from 'lodash';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { findColumnNames } from '../../lib';
+import { dbSchema } from '../../../server/config';
+import { findColumnNames, updateRecord } from '../../lib';
 import * as actions from '../../redux/actions';
+import QuickEdit from '../QuickEdit';
 const style = require('./style.css');
 
 interface ModuleProps {
@@ -13,8 +15,10 @@ interface ModuleProps {
 }
 
 class Display extends React.Component<ModuleProps> {
-  public columnList = findColumnNames(this.props.table);
-  public columnWidth = `${100 / this.columnList.length}%`;
+  public columnNameList = findColumnNames(this.props.table);
+  public columnIdList = Object.keys(dbSchema[this.props.table]);
+  public columnWidth = `${100 / this.columnNameList.length}%`;
+  public state: Obj = {};
   public componentDidMount() {
     this.props.requestOrders();
   }
@@ -32,13 +36,13 @@ class Display extends React.Component<ModuleProps> {
   }
 
   public render() {
-    const { store: { sortOrder } } = this.props;
+    const { store: { sortOrder, tableTemp } } = this.props;
     return (
       <section>
         <table className={style.table}>
           <tbody>
             <tr>
-              {this.columnList.map(name => (
+              {this.columnNameList.map(name => (
                 <th
                   key={name}
                   onClick={() => this.handleSort(name)}
@@ -50,18 +54,37 @@ class Display extends React.Component<ModuleProps> {
             </tr>
             {this.sortOrder(sortOrder.sortBy, sortOrder.direction).map((order: Obj) => (
               <tr key={order.日期}>
-                {this.columnList.map(term => {
-                  const value = term === '日期'
-                    ? order[term].substr(0, 10)
-                    : order[term];
-                  console.log('ici');
-                  return <td key={term} >{value}</td>
+                {this.columnNameList.map((term, index) => {
+                  const value = term === '日期' ? order[term].substr(0, 10) : order[term];
+                  const columnId = this.columnIdList[index];
+                  const id = order.id;
+                  const stateId = `${id}:${term}`;
+                  return (
+                    <td
+                      key={stateId}
+                      onDoubleClick={() => term !== '日期' && this.setState({ [stateId]: true })}
+                      onBlur={() => {
+                        updateRecord('order', {
+                          ref: { id },
+                          target: { [columnId]: tableTemp[`order:${id}`][columnId] },
+                        })
+                          .then(() => this.props.requestOrders())
+                          .then(() => this.setState({ [stateId]: undefined }));
+                      }}
+                    >
+                      {this.state[stateId]
+                        ?
+                        <QuickEdit
+                          {...{ id: order.id, value, column: columnId }}
+                        />
+                        : value}
+                    </td>);
                 })}
               </tr>
             ))}
           </tbody>
         </table>
-      </section>
+      </section >
     );
   }
 }
